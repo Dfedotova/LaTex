@@ -7,8 +7,8 @@
 \usepackage{amsmath}
 \usepackage[left=3.5cm,right=3.5cm, top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
 
-\author{Янкин Антон, БПИ191}
-\date{Домашнее задание 4 (Вариант 30)}
+\author{Вариант 30}
+\date{Домашнее задание 4}
 
 \begin{document}
 
