@@ -1,0 +1,392 @@
+\documentclass{article}
+\usepackage[T2A]{fontenc}
+\usepackage{amsfonts}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage[argument]{graphicx}
+\usepackage{amsmath}
+\usepackage[left=3.5cm,right=3.5cm, top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+
+\author{Вариант 2}
+\date{Домашнее задание 2}
+
+\begin{document}
+
+\maketitle
+
+\section{Рассчет псевдослучайных чисел методом серединных произведений}
+
+
+По условию задачи необходимо рассчитайть 100 псевдослучайных чисел методом серединных произведений. $z_1 = 8731$, $z_2 = 1617$.
+
+$\\$С помощью специально написанного кода (см. Приложение) рассчитываем 100 псевдослучайных чисел.
+
+$\\$Согласно алгоритму вычисления псевдослучайных чисел методом серединных произведений первым делом мы должны перемножить значения $z_1$ и $z_2$ из условия и получить восьмизначное число. Из него выбираем 4 средние цифры - это новое число последовательности $z_3$ = 1180.
+
+$\\$Полученное $z_3$ перемножаем с предыдущим элементом последовательности и вычленяем 4 цифры из середины, чтобы получить значение $z_4$. Всего проводим 98 подобных итераций (т.к. первые 2 числа уже известны).
+
+$\\$В случае, например, с $z_3$ мы столкнулись с ситуацией, когда внутри числа присутствует 0. Тогда мы получаем не четырехзначный элемент последовательности, а двух- или трехзначный. Но когда мы будем получать последовательность в пределах [0; 1), числа все равно будут иметь 4 знака после запятой.
+
+$\\$\textbf{Полученная последовательность}:
+\begin{center}
+\includegraphics[scale = 0.65]{images/seq.jpg}
+\end{center}
+
+
+\section{Первые 10 чисел последовательности}
+$\\$\textbf{0.8731, 0.1617, 0.118, 0.908, 0.7144, 0.8675, 0.9742, 0.5118, 0.8595, 0.9892}.
+
+\section{Гистограмма для последовательности из 100 чисел}
+
+$\\$Чтобы построить диаграмму, получаем диапазоны и частоты в данной последовательности. 
+$\\$Для начала сортируем последовательность в порядке возрастания:
+\begin{center}
+\includegraphics[scale = 0.65]{images/sorted.jpg}
+\end{center}
+
+$\\$Разделим интервал [0; 1) на 10 равных интервалов и посчитаем частоты (сколько элементов входит в каждый интервал): 10, 14, 7, 8, 5, 5, 9, 12, 17, 13.
+
+\begin{center}
+    \begin{tabular}{ | l | c | }
+    \hline
+    диапазон & частота ($O$) \\ \hline
+    [0; 0.1) & 10\\ \hline
+    [0.1; 0.2) & 14\\ \hline
+    [0.2; 0.3) & 7\\ \hline
+    [0.3; 0.4) & 8\\ \hline
+    [0.4; 0.5) & 5\\ \hline
+    [0.5; 0.6) & 5\\ \hline
+    [0.6; 0.7) & 9\\ \hline
+    [0.7; 0.8) & 12\\ \hline
+    [0.8; 0.9) & 17\\ \hline
+    [0.9; 1) & 13\\ \hline
+    \end{tabular}
+\end{center}
+\\
+
+$\\$\textbf{Гистограмма частот}:
+\begin{center}
+\includegraphics[scale = 0.65]{images/hist.jpg}
+\end{center}
+
+\section{Проверка гипотезы для последовательности из 100 чисел}
+
+Проверяем гипотезу о том, что последовательность имеет распределение $R(0, 1)$ критерием хи-квадрат, разбив интервал [0; 1) на десять равных интервалов.
+
+$\\H_0$: последовательность имеет распределение $R(0, 1)$.
+$\\H_{A}$: последовательность имеет распределение, отличное от $R(0, 1)$.
+
+$\\$Ранее мы уже посчиталы частоты для 10 равных интервалов. Остается посчитать значение статистики $\chi^2$ и сравнить его с $\chi^2_{k - 1}.$
+
+$\\$Статистика имеет общий вид:
+$$\chi^2 = \sum \limits_{j = 1}^k \dfrac{(O_j - E_j)^2}{E_j} \stackrel{H_0}{\sim} \chi_{k - 1}^2$$
+
+$\\$Здесь ожидаемая частота:
+$$E = np = 100 \cdot \dfrac{1}{10} = 10$$
+$$\text{(ожидается, что в каждом интервале будет по 10 элементов)}$$
+
+$\\k = 10$, т.к. у интервал [0; 1) разбит на 10 равных.
+
+$\\$Подставив полученные значения, досчитываем с помощью программы значение статистики:
+$$\chi^2 = \sum \limits_{j = 1}^{10} \dfrac{(O_j - 10)^2}{10} = 14.2$$
+
+$\\$По условию уровень значимости следует принять равным 5\%. Значит, ищем по таблице значение:
+$$\chi^2_{k - 1; \alpha} = \chi^2_{9; 0.05} \approx 16.919$$
+
+$\\$Критерий согласия хи-квадрат:
+$\\$1) $H_0 \text{ отвергается при } \chi^2 > \chi_{k - 1, \alpha}^2$
+$\\$2) $H_0 \text{ принимается при } \chi^2 \leq \chi_{k - 1, \alpha}^2$
+
+$\\$Рассмотрим $\chi^2$ и $\chi_{k - 1, \alpha}^2$. 14.2 < 16.919 $\Rightarrow$ \textbf{нет оснований отвергнуть гипотезу $H_0$} о том, что последовательность имеет распределение R(0, 1).
+
+
+\section{Гистограмма и проверка гипотезы для последовательности из 10000 чисел}
+
+$\\$Аналогично пунктам 3 и 4 сначала сортируем последовательность $x_i$ и вычисляем частоты для 10 равных интервалов: 9259, 94, 71, 73, 77, 84, 82, 97, 76, 87. 
+
+\begin{center}
+    \begin{tabular}{ | l | c | }
+    \hline
+    диапазон & наблюдаемая частота ($O$) \\ \hline
+    [0; 0.1) & 9259\\ \hline
+    [0.1; 0.2) & 94\\ \hline
+    [0.2; 0.3) & 71\\ \hline
+    [0.3; 0.4) & 73\\ \hline
+    [0.4; 0.5) & 77\\ \hline
+    [0.5; 0.6) & 84\\ \hline
+    [0.6; 0.7) & 82\\ \hline
+    [0.7; 0.8) & 97\\ \hline
+    [0.8; 0.9) & 76\\ \hline
+    [0.9; 1) & 87\\ \hline
+    \end{tabular}
+\end{center}
+\\
+
+$\\$Первое значение достаточно большое, т.к. в какой-то момент все элементы последовательности переходят в 0.
+
+$\\$\textbf{Гистограмма частот}:
+\begin{center}
+\includegraphics[scale = 0.5]{images/chart.png}
+\end{center}
+
+\newpage
+$\\$Теперь проверим гипотезу.
+$\\H_0$: последовательность имеет распределение $R(0, 1)$.
+$\\H_{A}$: последовательность имеет распределение, отличное от $R(0, 1)$.
+
+$\\$Ранее мы уже посчиталы частоты для 10 равных интервалов. Остается посчитать значение статистики $\chi^2$ и сравнить его с $\chi^2_{k - 1}.$
+
+$\\$Ожидаемая частота:
+$$E = np = 10000 \cdot \dfrac{1}{10} = 1000$$
+$$\text{(ожидается, что в каждом интервале будет по 1000 элементов)}$$
+
+$\\k = 10$, т.к. у интервал [0; 1) разбит на 10 равных.
+
+$\\$Подставив полученные значения, досчитываем с помощью программы значение статистики:
+$$\chi^2 = \sum \limits_{j = 1}^{10} \dfrac{(O_j - 1000)^2}{1000} = 75790.8$$
+
+$\\$По условию уровень значимости следует принять равным 5\%. Значит, ищем по таблице значение:
+$$\chi^2_{k - 1; \alpha} = \chi^2_{9; 0.05} \approx 16.919$$
+
+$\\$Рассмотрим $\chi^2$ и $\chi_{k - 1, \alpha}^2$. 75790.8 > 16.919 $\Rightarrow$ \textbf{отвергаем гипотезу $H_0$} о том, что последовательность имеет распределение R(0, 1).
+
+\section{Тест перестановок}
+
+$\\$Для тестирования используем последовательность $x_i$, в которой 10000 чисел лежат в пределах [0; 1). Создаем массив троек, в котором записаны 6 возможных троек, и массив-каунтер, в который мы записываем частоты.
+
+$\\$Проходимся по последовательности и считаем частоты. Результат: 45, 53, 40, 36, 51, 3108.
+
+\begin{center}
+    \begin{tabular}{ | c | c | }
+    \hline
+    тройка & частота \\ \hline
+    \{1, 2, 3\} & 3101\\ \hline
+    \{1, 3, 2\} & 53\\ \hline
+    \{2, 1, 3\} & 40\\ \hline
+    \{2, 3, 1\} & 36\\ \hline
+    \{3, 1, 2\} & 52\\ \hline
+    \{3, 2, 1\} & 51\\ \hline
+    \end{tabular}
+\end{center}
+\\
+
+\newpage
+$\\$Гистограмма частот:
+\begin{center}
+\includegraphics[scale = 0.5]{images/chart (2).png}
+\end{center}
+
+$\\$Проверка гипотезы о равновероятности перестановок.
+$\\H_0$: перестановки равновероятны
+$\\H_A$: перестановки не равновероятны
+
+$\\$Находим ожидаемую частоту ($n$ = 3333 тройки и $p$ вероятность получения одной из перестановок $\frac{1}{6}$):
+$$E = np = 3333 \cdot \dfrac{1}{6} = 555.5$$
+
+$\\$Досчитываем статистику в программе:
+$$\chi^2 = \sum \limits_{j = 1}^{6} \dfrac{(O_j - 555.5)^2}{555.5} = 13997.7$$
+
+$\\$Уровень значимости 5\%. Ищем по таблице значение:
+$$\chi^2_{k - 1; \alpha} = \chi^2_{5; 0.05} \approx 11.07$$
+
+$\\$Рассмотрим $\chi^2$ и $\chi_{k - 1, \alpha}^2$. 13997.7 > 16.919 $\Rightarrow$ \textbf{отвергаем гипотезу $H_0$} о том, что перестановки равновероятны, отвергается.
+
+\paragraph{Ответ:}
+
+$\\$2. Первые 10 чисел последовательности: 0.8731, 0.1617, 0.118, 0.908, 0.7144, 0.8675, 0.9742, 0.5118, 0.8595, 0.9892;
+
+$\\$4. Нет оснований  отвергнуть гипотезу $H_0$ о том, что последовательность имеет распределение $R(0, 1)$;
+
+$\\$5. Гипотеза $H_0$ о том, что последовательность имеет распределение $R(0, 1)$, отвергается;
+
+$\\$6. Последовательность не проходит тест перестановок.
+
+%-------------------------------------
+
+\newpage
+\begin{center}
+\textbf{Приложение}
+\end{center}
+
+\begin{flushright}
+Код программы.
+\end{flushright} 
+\begin{verbatim}
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <cmath>
+
+using namespace std;
+
+vector<double> getSequence(int n) {
+    vector<int> sequence;
+    sequence.push_back(8731);
+    sequence.push_back(1617);
+
+    int i = 0;
+    while (sequence.size() != n) {
+        sequence.push_back(((sequence[i] * sequence[i + 1]) / 100) % 10000);
+        i++;
+    }
+
+    vector<double> new_sequence;
+    new_sequence.reserve(sequence.size());
+
+    for (int j : sequence)
+        new_sequence.push_back((double) j / 10000);
+
+    return new_sequence;
+}
+
+void printSequence(vector<int> sequence) {
+    for (int i = 0; i < sequence.size(); ++i) {
+        cout << sequence[i] << " ";
+        if ((i + 1) % 10 == 0) cout << "\n";
+    }
+}
+
+void printDoubleSequence(vector<double> sequence) {
+    for (int i = 0; i < sequence.size(); ++i) {
+        cout << sequence[i] << " ";
+        if ((i + 1) % 10 == 0) cout << "\n";
+    }
+}
+
+vector<double> getBorders(double min, double step) {
+    vector<double> borders;
+    borders.push_back(min + step);
+
+    for (int i = 1; i < 10; ++i)
+        borders.push_back(borders[i - 1] + step);
+
+    return borders;
+}
+
+vector<int> findFrequencies(const vector<double> &sequence, const vector<double> &borders) {
+    vector<int> frequencies(10);
+
+    for (double i : sequence)
+        for (int j = 0; j < borders.size(); ++j) {
+            if (j == 0) {
+                if (i < borders[j] && i >= 0)
+                    frequencies[j]++;
+            } else if (i <= borders[j] && i >= borders[j - 1])
+                frequencies[j]++;
+        }
+
+    return frequencies;
+}
+
+double findChi(const vector<int> &frequencies_hyp, double exp, int n) {
+    double chi = 0;
+
+    for (int i = 0; i < n; ++i)
+        chi += (double) (pow(frequencies_hyp[i] - exp, 2)) / exp;
+
+    return chi;
+}
+
+void checkHypothesis(const vector<double> &sequence, int n) {
+
+    // Ищем частоты для проверки гипотезы
+    vector<double> equal_borders = {0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1};
+    vector<int> frequencies_hyp = findFrequencies(sequence, equal_borders);
+    cout << "\nFrequencies for hypothesis: ";
+    printSequence(frequencies_hyp);
+
+    // Вычисляем статистику
+    cout << "\nChi^2 = " << findChi(frequencies_hyp, (double) n / 10, 10) << "\n";
+}
+
+void getHistogramData(vector<double> sequence, int n) {
+
+    // Сортированный массив x_i
+    sort(sequence.begin(), sequence.end());
+    cout << "\nSorted:\n";
+    printDoubleSequence(sequence);
+
+    // Шаг диапазона
+    double step = (sequence[n - 1] - sequence[0]) / 10;
+    cout << "\nStep = " << step << "\n";
+
+    // Верхние границы диапазонов
+    vector<double> borders = getBorders(sequence[0], step);
+    cout << "\nBorders: ";
+    for (int i = 0; i < 10; ++i)
+        cout << borders[i] << " ";
+
+    // Ищем частоты
+    vector<int> frequencies = findFrequencies(sequence, borders);
+    cout << "\nFrequencies: ";
+    printSequence(frequencies);
+
+    // Переходим к проверке гипотезы
+    checkHypothesis(sequence, n);
+}
+
+vector<int> definingTriple(double x, double y, double z) {
+    if (z >= x && z >= y && y >= x)
+        return {1, 2, 3};
+    else if (x >= y && x >= z && z >= y)
+        return {3, 1, 2};
+    else if (y >= x && y >= z && x >= z)
+        return {2, 3, 1};
+    else if (y >= x && y >= z && z >= x)
+        return {1, 3, 2};
+    else if (x >= y && x >= z && y >= z)
+        return {3, 2, 1};
+    else return {2, 1, 3};
+}
+
+void permutationTest(vector<double> sequence) {
+    vector<vector<int>> triples = {{1, 2, 3},
+                                   {1, 3, 2},
+                                   {2, 1, 3},
+                                   {2, 3, 1},
+                                   {3, 1, 2},
+                                   {3, 2, 1}};
+    vector<int> count(6, 0);
+
+    for (int i = 0; i < 9999; i += 3) {
+        for (int j = 0; j < 6; ++j) {
+            if (triples[j] == definingTriple(sequence[i],
+                                             sequence[i + 1],
+                                             sequence[i + 2]))
+                ++count[j];
+        }
+    }
+
+    for (int c : count)
+        cout << c << " ";
+
+    cout << "\nChi^2 for test = " << findChi(count, 555.5, 6) << "\n";
+}
+
+void getData(int n) {
+    vector<double> sequence = getSequence(n);
+    cout << "\nSequence:\n";
+    printDoubleSequence(sequence);
+
+    getHistogramData(sequence, n);
+
+    if (n == 10000) {
+        cout << "\nPermutation test: ";
+        permutationTest(sequence);
+    }
+}
+
+int main() {
+    int n;
+    cout << "Input number of elements: ";
+    cin >> n;
+    getData(n);
+
+    return 0;
+}
+
+\end{verbatim} 
+
+
+\end{document}
