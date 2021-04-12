@@ -1,0 +1,162 @@
+\documentclass{article}
+\usepackage[T2A]{fontenc}
+\usepackage{amsfonts}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage[argument]{graphicx}
+\usepackage{amsmath}
+\usepackage[left=3.5cm,right=3.5cm, top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\usepackage{xcolor}
+\usepackage{hyperref}
+
+\definecolor{linkcolor}{HTML}{040C9A} % цвет ссылок
+\definecolor{urlcolor}{HTML}{040C9A} % цвет гиперссылок
+ 
+\hypersetup{pdfstartview=FitH,  linkcolor=linkcolor,urlcolor=urlcolor, colorlinks=true}
+
+\author{Вариант 2}
+\date{Задача 1}
+
+\begin{document}
+
+\maketitle
+
+Цель
+— оценить среднюю продолжительность вскармливания.
+
+а) Рассчитайте 90\% доверительный интервал для средней продолжительности, считая
+распределение признака нормальным.
+
+б) Постройте график «квантиль-квантиль» и попробуйте понять, соответствует ли
+распределение времени вскармливания нормальному закону.
+
+в) Прочитайте ниже описание бутстрапа и рассчитайте этим методом 90\% доверительный
+интервал для средней продолжительности вскармливания, сгенерировав 1000 перевыборок.
+
+г) При выполнении предыдущего пункта вы получите 1000 средних значений
+продолжительности вскармливания в перевыборках. Постройте гистограмму для этих
+значений. Похоже ли распределение среднего в перевыборках на нормальное?
+
+$\\$\textbf{Данные 2 варианта - duration\_2: 25, 11, 11, 10, 20, 21, 20, 31, 104, 15, 4, 12, 109, 6, 15, 15, 15, 13}
+
+\paragraph{Решение}
+$\\$(a) Т.к. в выборке все элементы имеют нормальное распределение по условию и нам не известно мат. ожидание и не известна дисперсия, то по теореме Фишера центральная статистика равна: $$U = \dfrac{(\overline{X} - \mu)\sqrt{n}}{\sqrt{\hat{\sigma}^2}} \sim t(n - 1)$$
+
+$\\$Доверительный интервал имеет вид:
+$$P(-t_{n - 1; \frac{\alpha}{2}} < U < t_{n - 1; \frac{\alpha}{2}}) = 1 -\alpha$$
+$$P(-t_{n - 1; \frac{\alpha}{2}} < \dfrac{(\overline{X} - \mu)\sqrt{n}}{\sqrt{\hat{\sigma}^2}} < t_{n - 1; \frac{\alpha}{2}}) = 1 -\alpha$$
+$$P\bigg(\overline{X} - t_{n - 1; \frac{\alpha}{2}} \dfrac{\hat{\sigma}}{\sqrt{n}} < \mu < \overline{X} + t_{n - 1; \frac{\alpha}{2}} \dfrac{\hat{\sigma}}{\sqrt{n}}\bigg) = 1 - \alpha$$
+
+$\\$Недостающие компоненты:
+$\\n = 18 \Rightarrow \sqrt{n} \approx 4.24$
+
+$\\\overline{X} = \dfrac{1}{n} \sum\limits_{i = 1}^n X_i = \dfrac{457}{18} \approx 25.39$
+
+$\\\hat{\sigma}^2 = \dfrac{1}{n - 1} \sum\limits_{i = 1}^n (X_i - \overline{X})^2 = \dfrac{1}{17}\cdot 15529.17 \approx 913.48$ $ $ $\Rightarrow$ $ $ ${\sigma} = \sqrt{913.48} \approx 30.23$
+$\\\\1 - \alpha = 0.9$ $ $ $\Rightarrow$ $ $ $\dfrac{\alpha}{2} = 0.05$.
+$\\\\$По таблице ищем квантиль Стьюдента: $t_{n - 1; \frac{\alpha}{2}} = t_{17; 0.05} = 1.74$
+
+$\\$Доверительный интервал:
+$$25.39 - 1.74\cdot \dfrac{30.23}{4.24} < \mu < 25.39 + 1.74\cdot \dfrac{30.23}{4.24}$$
+$$12.99 < \mu < 37.79$$
+
+\newpage
+$\\$(б) Из пункта (а): $\overline{X} = 25.39, \hat{\sigma} = 30.23.$
+
+$\\$Составляем таблицу, где:
+$\\p$ - порядок квантили $\bigg(\dfrac{1}{n + 1}, \dfrac{2}{n + 1}, ... , \dfrac{n}{n + 1}\bigg).$
+$\\\\\hat{Q}(p)$ - выборочная квантиль, т.е. элементы выборки, расположенные по возрастанию.
+$\\\\\Phi^{-1}(p)$ - квантиль $N(0, 1).$
+$\\\\Q(p)$ - теоретическая квантиль: $Q(p) = \overline{X} + \hat{\sigma}\cdot \Phi^{-1}(p) = 25.39 + 30.23\cdot\Phi^{-1}(p)$
+
+\begin{center} 
+\begin{tabular}{ | l | l | l | l | } \hline
+\footnotesize\text{Порядок,} $p$ & \footnotesize\text{Выборочная квантиль,} $\hat{Q}(p)$ & \footnotesize\text{Квантиль $N(0, 1)$,} $\Phi^{-1}(p)$ & \footnotesize\text{Теоретическая квантиль,} $Q(p)$\\ 
+\hline  1/19 & 4 & -1.619 & -23,552\\
+\hline  2/19 & 6 & -1.252 & -12,458\\
+\hline  3/19 & 10 & -1.003 & -4,931\\
+\hline  4/19 & 11 & -0.806 & 1,025\\
+\hline  5/19 & 11 & -0.634 & 6,224\\
+\hline  6/19 & 12 & -0.48 & 10,88\\
+\hline  7/19 & 13 & -0.336 & 15,233\\
+\hline  8/19 & 15 & -0.199 & 19,374\\
+\hline  9/19 & 15 & -0.066 & 23,395\\
+\hline  10/19 & 15 & 0.066 & 27,385 \\
+\hline  11/19 & 15 & 0.199 & 31,406\\
+\hline  12/19 & 20 & 0.336 & 35,547\\
+\hline  13/19 & 20 & 0.48 & 39,9\\
+\hline  14/19 & 21 & 0.634 & 44,556\\
+\hline  15/19 & 25 & 0.806 & 49,755\\
+\hline  16/19 & 31 & 1.003 & 55,711\\
+\hline  17/19 & 104 & 1.252 & 63,238\\
+\hline  18/19 & 109 & 1.619 & 74,332\\
+\hline \end{tabular} 
+\end{center} 
+
+\begin{center}
+\includegraphics[scale = 0.5]{images/plot.jpg}
+\end{center}
+
+$\\$Единственные два значения, которые сильно отклонены от графика функции $\hat{Q}(p) \approx Q(p)$ - это 104 и 109, остальные значения лежат очень близко к прямой. Поэтому можно сделать вывод, что в целом распределение времени вскармливания соответствует нормальному закону.
+
+\newpage
+$\\$(в) Чтобы рассчитать 90\% доверительный интервал для средней продолжительности вскармливания методом бутстрапа, пользуемся кодом из \hyperref[this]{приложения}.
+
+$\\$Согласно методу бутстрапа мы должны взять $n = 18$ раз случайно отобранное число из имеющихся данных и получить таким образом одну перевыборку. Для оценки расперделения выборочного среднего производим 1000 таких итераций.
+
+$\\$Бутстраповский
+доверительный интервал для среднего в генеральной совокупности заключается между квантилями  $\hat{Q}(\alpha/2)$ и $\hat{Q}(1 - \alpha/2)$ $\Rightarrow$ $\hat{Q}(0.05) \approx 14.72$ и $\hat{Q}(0.95) \approx 37.06$ (значения примерные, т.к. 1000 перевыборок с каждым запуском программы генерируется заново и значения отличаются на тысячные доли). Таким образом, 90\% бутстраповский ДИ равен (14.72, 37.06).
+ 
+$\\\\$(г) Снова основываемся на написанном \hyperref[this]{коде}: 
+
+\begin{center}
+\includegraphics[scale = 0.55]{images/гист.jpg}
+\end{center}
+
+$\\$Главные показатели того, что представлено нормальное распределение - это симметричность гистограммы и ее схожесть с перевернутым колоколом. В нашем случае гистограмма отдаленно напоминает нормальное распределение, поэтому можем сделать вывод что распределение среднего в перевыборках похоже на нормальное.
+
+\paragraph{Ответ:} 
+$\\$а) (12.99, 37.79); 
+$\\$б) соответствует; 
+$\\$в) (14.72, 37.06); 
+$\\$г) похоже.
+
+\newpage 
+$\\$Приложение:\label{this}
+\begin{verbatim}
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+sns.set(style="dark")
+
+resampling = list()
+
+
+def bootstrap(data, n=1000, func=np.mean):
+    size = len(data)
+    for c in range(n):
+        iter = np.random.choice(data, size=size, replace=True)
+        resampling.append(func(iter))
+    resampling.sort()
+
+    def ci(p):
+        u_val = (1 + p) / 2.
+        l_val = 1 - u_val
+        l_index = int(np.floor(n * l_val))
+        u_index = int(np.floor(n * u_val))
+        return (resampling[l_index], resampling[u_index])
+    return (ci)
+
+
+vector = [25, 11, 11, 10, 20, 21, 20, 31, 104, 15, 4, 12, 109, 6, 15, 15, 15, 13]
+boot = bootstrap(vector, n=1000)
+print(boot(.90))
+
+means = [resampling for i in range(1000)]
+sns.distplot(means, color='b', kde=False, hist_kws=dict(edgecolor="b", linewidth=.5))
+plt.title("Гистограмма для средних значений в перевыборках")
+plt.show()
+\end{verbatim}
+
+\end{document}
